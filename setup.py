@@ -71,9 +71,14 @@ setup(
     ],
     python_requires='>=3.6',
     install_requires = [
+        "PyYaml",
         # 'elstir',
         # 'elstir @ git+https://github.com/claudioperez/elstir@master',
         # 'rendre @ git+https://github.com/claudioperez/rendre@master',
+
+        # FEDEASdoc
+        "python-markdown-math",
+        "pymdown-extensions",
     ]
 )
 

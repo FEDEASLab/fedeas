@@ -5,7 +5,7 @@ import yaml
 
 
 ROOT = Path(
-    os.path.normpath(
+    os.path.expandvars(
         os.path.split(
             os.path.split(__file__)[0]
         )[0]

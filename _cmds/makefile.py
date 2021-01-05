@@ -1,4 +1,4 @@
-import glob
+import os
 from pathlib import Path
 
 from .conf import ROOT, GIT, MATLAB, Packages, Gallery, REPOS
@@ -9,9 +9,7 @@ except Exception as e:
     ROOT = Path("../")
     GIT,MATLAB,Packages,Gallery = ["NONE"]*4
 
-# MATLAB = "matlab"
-# ROOT = ""
-# GIT = ""
+INVOKE = "&" if "nt" in os.name.lower() else ""
 
 # Root directories
 CMD = ROOT/"_cmds/"
@@ -24,18 +22,19 @@ GLY = ROOT/"Gallery"
 
 
 m2html = \
-f"addpath {CMD/'m2html'}; " \
+f"\"addpath '{CMD/'m2html'}'; " \
 "m2html('mfiles','latest', " \
-    "'htmldir','../FEDEASdoc/docs/Functions/', " \
+    f"'htmldir', '{ROOT/'/FEDEASdoc/docs/Functions/'}', " \
     "'recursive','on'," \
     "'global','on'," \
     "'extension','.md'," \
     "'source','off', " \
-    "'indexFile', '_index'" \
+    "'indexFile', '_index', " \
+    f"'data_dir', '{ROOT/'.aurore/'}'" \
     "); " \
-"exit;"
+"exit;\""
 
-ELSTIR = ["elstir", "--config-file", f"{DOC/'elstir.yaml'}"]
+ELSTIR = ["elstir"]
 
 options = {
     "pkg": tuple([pkg for pkg in Packages])
@@ -53,15 +52,15 @@ makefile = {
         "build": {
             "Generate intermediate API pages with `m2html`.": 
                 [[MATLAB, "-batch", m2html]],
-            "Generate index pages":
-                [["rendre", "-d", folder]
-                for folder in ["TEST"] ], #glob.glob(DOC/"docs/Functions/*")],
+            # "Generate index pages":
+            #     [["rendre", "-d", folder]
+            #     for folder in ["TEST"] ], #glob.glob(DOC/"docs/Functions/*")],
             "Build full website from intermediate pages.": 
-                [[*ELSTIR, "--site-dir", f"{WEB}","build"]],
+                [[*ELSTIR, "build", "--config-file", f"{DOC/'elstir.yml'}", "--site-dir", f"'{WEB}'"]],
         },
         "serve": {
             "Create a live server for real-time web page editing.":
-                [[*ELSTIR, "serve"]]
+                [[*ELSTIR, "serve", "--config-file", f"{DOC/'elstir.yml'}"]]
         }
     },
     "Packaging and Distribution":{
@@ -77,17 +76,24 @@ makefile = {
         },
         "clone": {
             "Initialize fedeas directory by cloning project repositories.": 
-                [[GIT, "clone", f"http://github.com/{user}/{repo}", path]
+                [[GIT, "clone", f"http://github.com/{user}/{repo}", f"{path}"]
                     for path, (user,repo) in REPOS.items()]
         },
         "init" : {
-            "Initialize fmake system": [
-                [GIT, "clone", f"http://github.com/claudioperez/aurore", ROOT/"_cmds/aurore"],
-                ["cd",ROOT/"_cmds/aurore",";", "python","setup.py", "develop"],
-                [GIT, "clone", f"http://github.com/claudioperez/elstir", ROOT/"_cmds/elstir"],
-                ["cd",ROOT/"_cmds/elstir",";", "python","setup.py", "develop"],
-                [GIT, "clone", f"http://github.com/claudioperez/rendre", ROOT/"_cmds/rendre"],
-                ["cd",ROOT/"_cmds/rendre",";", "python","setup.py", "develop"],
+            "Install in-house fmake system dependencies": [
+                [GIT, "clone", "-b", "cmp-dev", "--single-branch","--recurse-submodules", f"http://github.com/claudioperez/aurore", f"{ROOT/'_cmds/aurore'}"],
+                [{"cwd":f"{ROOT/'_cmds/aurore'}"},"python","setup.py", "develop"],
+                [GIT, "clone", f"http://github.com/claudioperez/elstir", f"{ROOT/'_cmds/elstir'}"],
+                [{"cwd":f"{ROOT/'_cmds/elstir'}"}, "python","setup.py", "develop"],
+                [GIT, "clone", f"http://github.com/claudioperez/rendre", f"{ROOT/'_cmds/rendre'}"],
+                [{"cwd":f"{ROOT/'_cmds/rendre'}"}, "python","setup.py", "develop"],
+            ]
+        },
+        "upgrade" : {
+            "Upgrade in-house fmake system dependencies": [
+                [{"cwd":f"{ROOT/'_cmds/aurore'}"}, GIT, "pull"],
+                [{"cwd":f"{ROOT/'_cmds/elstir'}"}, GIT, "pull"],
+                [{"cwd":f"{ROOT/'_cmds/rendre'}"}, GIT, "pull"],
             ]
         },
         # "upgrade": {

@@ -3,6 +3,7 @@ import os
 import sys
 import json
 import argparse
+import subprocess
 from pathlib import Path
 from pprint import pprint
 
@@ -66,17 +67,18 @@ def run_cmd(makefile,targets,target,args=[],nums=[]):
         args.pop(args.index("--dry"))
         for group in commands:
             for command in group:
-                num+=1
                 if num in nums:
-                    print([str(f).format(*args[2:]) for f in command])
+                    print([str(f).format(*args[2:]) for f in command if not isinstance(f,dict)])
+                num+=1
     else:
         for group in commands:
             for command in group:
                 if num in nums:
-                    cmd = [str(f).format(*args[2:]) for f in command]
-                    check = input(f"\nEnter <ok> to run the following command: \n  >{cmd}\n")
+                    cmd = [str(f).format(*args[2:]) for f in command if not isinstance(f,dict)]
+                    kwds = command[0] if isinstance(command[0],dict) else {}
+                    check = input(f"\nEnter <ok> to run the following command: \n  >{' '.join(cmd)}\n   ({kwds})\n")
                     if check == "ok":
-                        os.system(" ".join(cmd))
+                        subprocess.call(cmd, **kwds)
                 num+=1
 
 def help_cmd(makefile,targets,target)->str:
@@ -92,9 +94,14 @@ def help_cmd(makefile,targets,target)->str:
             options = ""
 
     print(f"usage: fmake {target} {options}\n")
+    n = 1
     for description, cmds in commands:
         print(f"  {description}")
-        for c in cmds: print(f"    >{' '.join(str(i) for i in c)}]\n")
+        for c in cmds:
+            print(
+                f"   {n}) {' '.join(str(i) if len(str(i)) < 10 else '...'+str(i)[-10:] for i in c if not isinstance(i,dict))}\n"
+            )
+            n += 1
 
 
 
@@ -105,12 +112,14 @@ def main():
     }
 
     # print(targets)
-    if len(sys.argv) == 1:
+    if len(sys.argv) == 1 or len(sys.argv)==2 and "help" in sys.argv[1]:
         print(make_help(makefile))
-    elif "help" == sys.argv[1]:
+    elif "help" in sys.argv[1]:
         help_cmd(makefile,targets,sys.argv[2])
     else:
-        num_exp = re.compile(f"-(\d)")
-        nums = [int(num_exp.search(arg).group(1)) for arg in sys.argv if num_exp.search(arg)]
+        num_exp = re.compile(r"-(\d)")
+        nums = [int(num_exp.search(arg).group(1)) for arg in sys.argv[1:] if num_exp.search(arg)]
+        if nums: print(f"Selected command numbers: {nums}")
+        nums = [n-1 for n in nums]
         run_cmd(makefile,targets,sys.argv[1],sys.argv+[""]*7,nums)
 
