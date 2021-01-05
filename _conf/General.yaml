@@ -1,0 +1,17 @@
+# Configuration of general project environment.
+
+
+ROOT:
+  FEDEASLab: [claudioperez, FEDEASLab]
+  # FEDEASLab: [FCFilippou,FEDEASLab]
+  FEDEASweb: [FCFilippou,FEDEASweb]
+  FEDEASdoc: [claudioperez,FEDEASdoc]
+  Gallery:
+    Reader: [FEDEASLab,Reader]
+    #Homework: FCFilippou/
+  # Packages:
+  #   cmp: sm:claudioperez/FEDEASLab
+  #   basic: gh:FEDEASLab-Basic
+  # Research:
+  #   stdy-????/
+

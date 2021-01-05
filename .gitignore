@@ -1,0 +1,14 @@
+# Sub repositories
+FEDEASLab/
+FEDEASdoc/
+Gallery/
+Packages/
+_conf/user.yaml
+
+# Python files
+__pycache__/
+*.egg-info/
+
+aurore/
+elstir/
+rendre/

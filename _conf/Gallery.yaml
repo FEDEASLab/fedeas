@@ -1,0 +1,14 @@
+# Categorization 
+
+curvature:
+  include:
+    - Ex_3_4
+    - '@b/[%<>|<glob>]/<line>:<regex>:<cmd>'
+
+
+section-analysis:
+  include:
+    - '@b/{%i}.m:SectData'
+
+
+
