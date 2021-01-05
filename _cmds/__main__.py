@@ -1,3 +1,4 @@
+import re
 import os
 import sys
 import json
@@ -48,22 +49,35 @@ or: {name} help <command>
   {groups}
 """
 
-def run_cmd(makefile,targets,target,args=[]):
+def run_cmd(makefile,targets,target,args=[],nums=[]):
     recipe = makefile[targets[target]][target]
     if isinstance(recipe,dict):
         commands = recipe.values()
+        options = []
     else:
         commands = recipe[1].values()
+    num = 0
+    if "--all" in nums:
+        args.pop(args.index("--all"))
+        nums = list(range(10))
+    elif not nums:
+        nums = list(range(10))
     if "--dry" in args:
         args.pop(args.index("--dry"))
         for group in commands:
             for command in group:
-                print([f.format(*args[2:]) for f in command])
+                num+=1
+                if num in nums:
+                    print([str(f).format(*args[2:]) for f in command])
     else:
         for group in commands:
             for command in group:
-                print("not-dry")
-                print([f.format(*args[2:]) for f in command])
+                if num in nums:
+                    cmd = [str(f).format(*args[2:]) for f in command]
+                    check = input(f"\nEnter <ok> to run the following command: \n  >{cmd}\n")
+                    if check == "ok":
+                        os.system(" ".join(cmd))
+                num+=1
 
 def help_cmd(makefile,targets,target)->str:
     recipe = makefile[targets[target]][target]
@@ -80,7 +94,7 @@ def help_cmd(makefile,targets,target)->str:
     print(f"usage: fmake {target} {options}\n")
     for description, cmds in commands:
         print(f"  {description}")
-        for c in cmds: print(f"    >{' '.join(c)}]\n")
+        for c in cmds: print(f"    >{' '.join(str(i) for i in c)}]\n")
 
 
 
@@ -96,5 +110,7 @@ def main():
     elif "help" == sys.argv[1]:
         help_cmd(makefile,targets,sys.argv[2])
     else:
-        run_cmd(makefile,targets,sys.argv[1],sys.argv+[""]*7)
+        num_exp = re.compile(f"-(\d)")
+        nums = [int(num_exp.search(arg).group(1)) for arg in sys.argv if num_exp.search(arg)]
+        run_cmd(makefile,targets,sys.argv[1],sys.argv+[""]*7,nums)
 

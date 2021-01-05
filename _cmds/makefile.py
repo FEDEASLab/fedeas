@@ -1,8 +1,9 @@
 import glob
 from pathlib import Path
 
+from .conf import ROOT, GIT, MATLAB, Packages, Gallery, REPOS
 try:
-    from .conf import ROOT, GIT, MATLAB, Packages, Gallery
+    from .conf import ROOT, GIT, MATLAB, Packages, Gallery, REPOS
 except Exception as e:
     print(e)
     ROOT = Path("../")
@@ -21,19 +22,6 @@ PKG = ROOT/"Packages"  #
 GLY = ROOT/"Gallery"
 
 
-
-# m2html = f"""
-# addpath {CMD/'m2html'};
-# m2html('mfiles','latest', ...
-#        'htmldir','../FEDEASdoc/docs/Functions/', ...
-#        'recursive','on',...
-#        'global','on',...
-#        'extension','.md',...
-#        'source','off', ...
-#        'indexFile', '_index'...
-#        );
-# exit;
-# """
 
 m2html = \
 f"addpath {CMD/'m2html'}; " \
@@ -56,10 +44,10 @@ galleries = tuple([k for k in Gallery])
 
 makefile = {
     "Resource management and indexing": {
-        "list": ((galleries,"<args>"),{
-            "List gallery items.":
-                [["rendre", "-d", "Gallery.yaml#/{0}", "list", "{1}"]],
-        }),
+        # "list": ((galleries,"<args>"),{
+        #     "List gallery items.":
+        #         [["rendre", "-d", "Gallery.yaml#/{0}", "list", "{1}"]],
+        # }),
     },
     "Documentation": {
         "build": {
@@ -79,9 +67,7 @@ makefile = {
     "Packaging and Distribution":{
         "update": (options["pkg"] , {
             "Create necessary `.p` files and copy to package directory.":
-                [["", "{pkg}"]],
-            "Create zip file.":
-                [[""]]
+                [["", "{0}"]],
         })
     },
     "House-keeeping": {
@@ -89,16 +75,34 @@ makefile = {
             "Update README file":
                 [[""]]
         },
-        "init": {
-            "Initialize directory": 
-                [[""]]
+        "clone": {
+            "Initialize fedeas directory by cloning project repositories.": 
+                [[GIT, "clone", f"http://github.com/{user}/{repo}", path]
+                    for path, (user,repo) in REPOS.items()]
         },
-        "upgrade": (("elstir", "aurore", "rendre"), {
-            "Upgrade system dependencies": [
-                ["pip", "install", "--upgrade", 
-                    "{0} @ git+https://github.com/claudioperez/{0}@cmp-dev"]
+        "init" : {
+            "Initialize fmake system": [
+                [GIT, "clone", f"http://github.com/claudioperez/aurore", ROOT/"_cmds/aurore"],
+                ["cd",ROOT/"_cmds/aurore",";", "python","setup.py", "develop"],
+                [GIT, "clone", f"http://github.com/claudioperez/elstir", ROOT/"_cmds/elstir"],
+                ["cd",ROOT/"_cmds/elstir",";", "python","setup.py", "develop"],
+                [GIT, "clone", f"http://github.com/claudioperez/rendre", ROOT/"_cmds/rendre"],
+                ["cd",ROOT/"_cmds/rendre",";", "python","setup.py", "develop"],
             ]
-        })
+        },
+        # "upgrade": {
+        #     "Upgrade system dependencies": [
+        #         ["pip", "install", "--upgrade", 
+        #             f"{module} @ git+https://github.com/claudioperez/{module}@cmp-dev"]
+        #         for module in ["elstir", "aurore", "rendre"]
+        #     ]
+        # },
+        # "upgrade": (("elstir", "aurore", "rendre"), {
+        #     "Upgrade system dependencies": [
+        #         ["pip", "install", "--upgrade", 
+        #             "{0} @ git+https://github.com/claudioperez/{0}@cmp-dev"]
+        #     ]
+        # })
     }
 }
 
