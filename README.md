@@ -27,10 +27,14 @@
 
 ## `fmake` Commands
 
+The `fmake` command is invoked as follows from the command line:
+
+```
 usage: fmake <command> [--<int>, --dry]
    or: fmake help <command>
+```
 
-Where <command> may be selected from the following categories:
+Where `<command>` may be selected from the following categories:
 
   Resource management and indexing
   -   {}

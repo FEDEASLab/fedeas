@@ -35,7 +35,7 @@ def make_parser(makefile):
 
 #     return targets
 
-def make_help(makefile)->str:
+def make_help(makefile,args=[])->str:
     name = "fmake"
     # cmds = [c for k in makefile for c in makefile[k]]
     groups = "\n\n  ".join(
@@ -43,11 +43,12 @@ def make_help(makefile)->str:
         "  {"+", ".join([f'`{c}`' for c in makefile[k]]) + "}" ])
         for k in makefile ]
     )
+    fence = "```\n" if "--print-help" in args else ""
     return f"""
-usage: {name} <command> [--<int>, --dry]
+{fence}usage: {name} <command> [--<int>, --dry]
    or: {name} help <command>
-
-Where <command> may be selected from the following categories:
+{fence}
+Where `<command>` may be selected from the following categories:
 
   {groups}
 
@@ -62,6 +63,7 @@ def run_cmd(makefile,targets,target,args=[],nums=[]):
     else:
         commands = recipe[-1].values()
     num = 0
+
     if "--all" in nums:
         args.pop(args.index("--all"))
         nums = list(range(10))
@@ -117,8 +119,8 @@ def main():
     }
 
     # print(targets)
-    if len(sys.argv) == 1 or len(sys.argv)==2 and "help" in sys.argv[1]:
-        print(make_help(makefile))
+    if len(sys.argv) == 1 or len(sys.argv)==2 and "help" in sys.argv[1] or "--print-help" in sys.argv:
+        print(make_help(makefile,sys.argv))
     elif "help" in sys.argv[1]:
         help_cmd(makefile,targets,sys.argv[2])
     else:
