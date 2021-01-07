@@ -72,15 +72,15 @@ makefile = {
         })
     },
     "House-keeeping": {
-        "refresh": {
-            "Update README file":
-                [[""]]
-        },
-        "clone": {
-            "Initialize fedeas directory by cloning project repositories.": 
-                [[GIT, "clone", f"http://github.com/{user}/{repo}", f"{path}"]
-                    for path, (user,repo) in REPOS.items()]
-        },
+        # "refresh": {
+        #     "Update README file":
+        #         [[""]]
+        # },
+        # "clone": {
+        #     "Initialize fedeas directory by cloning project repositories.": 
+        #         [[GIT, "clone", f"http://github.com/{user}/{repo}", f"{path}"]
+        #             for path, (user,repo) in REPOS.items()]
+        # },
         "init" : {
             "Install in-house fmake system dependencies": [
                 [GIT, "clone", "-b", "cmp-dev", "--single-branch","--recurse-submodules", f"http://github.com/claudioperez/aurore", f"{ROOT/'_cmds/aurore'}"],

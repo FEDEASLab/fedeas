@@ -39,8 +39,8 @@ def make_help(makefile)->str:
     name = "fmake"
     # cmds = [c for k in makefile for c in makefile[k]]
     groups = "\n\n  ".join(
-        ["\n  ".join([k, 
-        "  {"+", ".join([c for c in makefile[k]]) + "}" ])
+        ["\n  - ".join([k, 
+        "  {"+", ".join([f'`{c}`' for c in makefile[k]]) + "}" ])
         for k in makefile ]
     )
     return f"""
@@ -48,6 +48,7 @@ usage: {name} <command> [--<int>, --dry]
    or: {name} help <command>
 
 Where <command> may be selected from the following categories:
+
   {groups}
 
 To learn more about a command, run `>{name} help <command>`
