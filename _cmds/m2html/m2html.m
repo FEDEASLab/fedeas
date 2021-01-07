@@ -132,7 +132,7 @@ options = struct('verbose', 1,...
                  'rootdir', pwd,...
 				 'ignoredDir', {{'.svn' 'cvs'}}, ...
                  'language', 'english', ...
-                 'data_dir', false ...
+                 'data_file', false ...
              );
 
 if nargin == 1 & isstruct(varargin{1})
@@ -319,9 +319,9 @@ for i=1:2:length(paramlist)
 			else
 				error(sprintf(msgInvalidPair,pname));
             end
-        case 'data_dir'
+        case 'data_file'
             if ischar(pvalue)
-                options.data_dir = pvalue;
+                options.data_file = pvalue;
 			else
 				error(sprintf(msgInvalidPair,pname));
             end
@@ -484,7 +484,8 @@ for i=1:length(mfiles)
 end
 json_string = jsonencode(containers.Map({'items'},{json_data}));
 
-fid = fopen('.aurore/aurore.cache.json','wt');
+%fid = fopen('../.aurore/aurore.cache.json','wt');
+fid = fopen(options.data_file,'wt');
 fprintf(fid, json_string);
 fclose(fid);
 %-------------------------------------------------------------------------------
@@ -497,15 +498,24 @@ for i=1:length(mdir)
 			if exist(fullfile(options.htmlDir,ldir{1:j})) ~= 7
 				%- Create the output directory
 				if options.verbose
-					fprintf('Creating directory %s...\n',...
+					fprintf('Creating directory %s\n',...
 							fullfile(options.htmlDir,ldir{1:j}));
 				end
 				if j == 1
-					[status, msg] = mkdir(escapeblank(options.htmlDir), ...
-						escapeblank(ldir{1}));
+					if options.verbose 
+						fprintf('\n%s\n',escapeblank(options.htmlDir));
+						fprintf('\n%s\n',escapeblank(ldir{1}));
+					end
+					% [status, msg] = mkdir(escapeblank(options.htmlDir), ...
+					% 	escapeblank(ldir{1}));
+					[status, msg] = mkdir(options.htmlDir, ldir{1});
 				else
-					[status, msg] = mkdir(escapeblank(options.htmlDir), ...
-						escapeblank(fullfile(ldir{1:j})));
+					if options.verbose 
+						fprintf('\n%s\n',fullfile(ldir{1:j}));
+					end
+					% [status, msg] = mkdir(escapeblank(options.htmlDir), ...
+					% 	escapeblank(fullfile(ldir{1:j})));
+					[status, msg] = mkdir(options.htmlDir, fullfile(ldir{1:j}));
 				end
 				error(msg);
 			end

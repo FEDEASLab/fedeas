@@ -23,16 +23,17 @@ GLY = ROOT/"Gallery"
 
 
 
+# f"'htmldir', '{Path('../FEDEASdoc/docs/Functions/')}', " \
 m2html = \
 f"\"addpath '{CMD/'m2html'}'; " \
-f"m2html('mfiles','{PKG/'latest/'}', " \
-    f"'htmldir', '{ROOT/'/FEDEASdoc/docs/Functions/'}', " \
+f"m2html('mfiles','latest/', " \
+    f"'htmldir', '{DOC/'docs/Functions/'}', " \
     "'recursive','on'," \
     "'global','on'," \
     "'extension','.md'," \
     "'source','off', " \
     "'indexFile', '_index', " \
-    f"'data_dir', '{ROOT/'.aurore/'}'" \
+    f"'data_file', '{CFG/'.aurore/fdlb.cache.json'}'" \
     "); " \
 "exit;\""
 
@@ -52,10 +53,10 @@ makefile = {
     },
     "Documentation": {
         "build": {
-            "Update `latest` FEDEASLab package.":
+            "Copy current `.m` files to 'latest' package.":
                 [["python", CMD/"update.py","latest", CFG/"Packages.yaml",SRC,PKG,"--all-m"]],
             "Generate intermediate API pages with `m2html`.": 
-                [[MATLAB, "-batch", m2html]],
+                [[{"cwd":PKG},MATLAB, "-batch", m2html]],
             "Build full website from intermediate pages.": 
                 [[*ELSTIR, "build", "--config-file", f"{DOC/'elstir.yml'}", "--site-dir", f"'{WEB}'"]],
         },

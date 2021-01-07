@@ -45,9 +45,12 @@ def make_help(makefile)->str:
     )
     return f"""
 usage: {name} <command> [--<int>, --dry]
-or: {name} help <command>
+   or: {name} help <command>
 
+Where <command> may be selected from the following categories:
   {groups}
+
+To learn more about a command, run `>{name} help <command>`
 """
 
 def run_cmd(makefile,targets,target,args=[],nums=[]):
@@ -76,9 +79,10 @@ def run_cmd(makefile,targets,target,args=[],nums=[]):
                 if num in nums:
                     cmd = [str(f).format(*args[2:]) for f in command if not isinstance(f,dict)]
                     kwds = command[0] if isinstance(command[0],dict) else {}
-                    check = input(f"\nEnter 'ok' to run the following command: \n  >{' '.join(cmd)}\n   ({kwds})\n")
+                    check = input(f"\nEnter 'ok' to execute the following command: \n    >{' '.join(cmd)}\n    in environment: {kwds}\nInput: ")
                     if check == "ok":
                         subprocess.call(cmd, **kwds)
+                    print("\n\nCommand completed.\n")
                 num+=1
 
 def help_cmd(makefile,targets,target)->str:
