@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 
+from .update import update_pkg
 from .conf import ROOT, GIT, MATLAB, Packages, Gallery, REPOS
 try:
     from .conf import ROOT, GIT, MATLAB, Packages, Gallery, REPOS
@@ -12,10 +13,11 @@ except Exception as e:
 INVOKE = "&" if "nt" in os.name.lower() else ""
 
 # Root directories
-CMD = ROOT/"_cmds/"
+CMD = ROOT/"_cmds"
+CFG = ROOT/"_conf"
 DOC = ROOT/"FEDEASdoc" # Source repository for FEDEASLab webside
 WEB = ROOT/"FEDEASweb" # Build repository for FEDEASLab webside
-LAB = ROOT/"FEDEASLab" # Source repository for FEDEASLab
+SRC = ROOT/"FEDEASLab" # Source repository for FEDEASLab
 PKG = ROOT/"Packages"  # 
 GLY = ROOT/"Gallery"
 
@@ -23,7 +25,7 @@ GLY = ROOT/"Gallery"
 
 m2html = \
 f"\"addpath '{CMD/'m2html'}'; " \
-"m2html('mfiles','latest', " \
+f"m2html('mfiles','{PKG/'latest/'}', " \
     f"'htmldir', '{ROOT/'/FEDEASdoc/docs/Functions/'}', " \
     "'recursive','on'," \
     "'global','on'," \
@@ -37,7 +39,7 @@ f"\"addpath '{CMD/'m2html'}'; " \
 ELSTIR = ["elstir"]
 
 options = {
-    "pkg": tuple([pkg for pkg in Packages])
+    "pkg": tuple(["--all"]+[pkg for pkg in Packages])
 }
 galleries = tuple([k for k in Gallery])
 
@@ -50,11 +52,10 @@ makefile = {
     },
     "Documentation": {
         "build": {
+            "Update `latest` FEDEASLab package.":
+                [["python", CMD/"update.py","latest", CFG/"Packages.yaml",SRC,PKG,"--all-m"]],
             "Generate intermediate API pages with `m2html`.": 
                 [[MATLAB, "-batch", m2html]],
-            # "Generate index pages":
-            #     [["rendre", "-d", folder]
-            #     for folder in ["TEST"] ], #glob.glob(DOC/"docs/Functions/*")],
             "Build full website from intermediate pages.": 
                 [[*ELSTIR, "build", "--config-file", f"{DOC/'elstir.yml'}", "--site-dir", f"'{WEB}'"]],
         },
@@ -64,9 +65,9 @@ makefile = {
         }
     },
     "Packaging and Distribution":{
-        "update": (options["pkg"] , {
-            "Create necessary `.p` files and copy to package directory.":
-                [["", "{0}"]],
+        "update": (options["pkg"] ,("--dry-run",), {
+            "Copy '.m' files to the Packages directory.":
+                [[ "python", CMD/"update.py","{0}",CFG/"Packages.yaml",SRC,PKG,"{}"]],
         })
     },
     "House-keeeping": {

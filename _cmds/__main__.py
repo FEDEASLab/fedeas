@@ -44,7 +44,7 @@ def make_help(makefile)->str:
         for k in makefile ]
     )
     return f"""
-usage: {name} <command>
+usage: {name} <command> [--<int>, --dry]
 or: {name} help <command>
 
   {groups}
@@ -56,7 +56,7 @@ def run_cmd(makefile,targets,target,args=[],nums=[]):
         commands = recipe.values()
         options = []
     else:
-        commands = recipe[1].values()
+        commands = recipe[-1].values()
     num = 0
     if "--all" in nums:
         args.pop(args.index("--all"))
@@ -76,7 +76,7 @@ def run_cmd(makefile,targets,target,args=[],nums=[]):
                 if num in nums:
                     cmd = [str(f).format(*args[2:]) for f in command if not isinstance(f,dict)]
                     kwds = command[0] if isinstance(command[0],dict) else {}
-                    check = input(f"\nEnter <ok> to run the following command: \n  >{' '.join(cmd)}\n   ({kwds})\n")
+                    check = input(f"\nEnter 'ok' to run the following command: \n  >{' '.join(cmd)}\n   ({kwds})\n")
                     if check == "ok":
                         subprocess.call(cmd, **kwds)
                 num+=1
@@ -87,9 +87,9 @@ def help_cmd(makefile,targets,target)->str:
         commands = recipe.items()
         options = ""
     else:
-        commands = recipe[1].items()
+        commands = recipe[-1].items()
         try:
-            options =  f"[{'|'.join(o for o in recipe[0])}]"
+            options =  " ".join([f"[{'|'.join(o for o in r)}]" for r in recipe[:-2]])
         except:
             options = ""
 
@@ -118,8 +118,10 @@ def main():
         help_cmd(makefile,targets,sys.argv[2])
     else:
         num_exp = re.compile(r"-(\d)")
-        nums = [int(num_exp.search(arg).group(1)) for arg in sys.argv[1:] if num_exp.search(arg)]
+        nums = [num_exp.search(arg).group(1) for arg in sys.argv[1:] if num_exp.search(arg)]
         if nums: print(f"Selected command numbers: {nums}")
-        nums = [n-1 for n in nums]
+        for num in nums:
+            sys.argv.pop(sys.argv.index("-" + num))
+        nums = [int(n)-1 for n in nums]
         run_cmd(makefile,targets,sys.argv[1],sys.argv+[""]*7,nums)
 

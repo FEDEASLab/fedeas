@@ -213,8 +213,8 @@ latest:
       - MatState  = Extract_Sec2MatState (m,as,SecState)
       - MatState  = Extract_El2MatState  (mat,aeps,ElState,rd)
   Introspection:
-    Structure@m:
-      - A  = A_matrix (Model) @p
+    Structure:
+      - A  = A_matrix (Model)
       - B  = B_matrix (Model)
       - V0 = V0_vector (Model,ElemData,Roption)
       - Q0 = Q0_vector (Model,ElemData)
