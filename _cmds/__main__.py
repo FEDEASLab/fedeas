@@ -45,14 +45,14 @@ def make_help(makefile,args=[])->str:
     )
     fence = "```\n" if "--print-help" in args else ""
     return f"""
-{fence}usage: {name} <command> [--<int>, --dry]
-   or: {name} help <command>
+{fence}usage: {name} <target> [--<command-num>, --dry]
+   or: {name} help <target>
 {fence}
-Where `<command>` may be selected from the following categories:
+Available `<target>` names are listed by category below:
 
   {groups}
 
-To learn more about a command, run `>{name} help <command>`
+To learn more about a target and its commands, run `>{name} help <target>`
 """
 
 def run_cmd(makefile,targets,target,args=[],nums=[]):
@@ -82,10 +82,10 @@ def run_cmd(makefile,targets,target,args=[],nums=[]):
                 if num in nums:
                     cmd = [str(f).format(*args[2:]) for f in command if not isinstance(f,dict)]
                     kwds = command[0] if isinstance(command[0],dict) else {}
-                    check = input(f"\nEnter 'ok' to execute the following command: \n    >{' '.join(cmd)}\n    in environment: {kwds}\nInput: ")
-                    if check == "ok":
+                    check = input(f"\nEnter 'run' to execute the following command: \n    >{' '.join(cmd)}\n     in environment: {kwds}\nInput: ")
+                    if check == "run":
                         subprocess.call(cmd, **kwds)
-                    print("\n\nCommand completed.\n")
+                        print("\n\nCommand completed.\n")
                 num+=1
 
 def help_cmd(makefile,targets,target)->str:

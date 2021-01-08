@@ -45,12 +45,12 @@ options = {
 galleries = tuple([k for k in Gallery])
 
 makefile = {
-    "Resource management and indexing": {
-        # "list": ((galleries,"<args>"),{
-        #     "List gallery items.":
-        #         [["rendre", "-d", "Gallery.yaml#/{0}", "list", "{1}"]],
-        # }),
-    },
+    # "Resource management and indexing": {
+    #     # "list": ((galleries,"<args>"),{
+    #     #     "List gallery items.":
+    #     #         [["rendre", "-d", "Gallery.yaml#/{0}", "list", "{1}"]],
+    #     # }),
+    # },
     "Documentation": {
         "build": {
             "Copy current `.m` files to 'latest' package.":
@@ -71,7 +71,7 @@ makefile = {
                 [[ "python", CMD/"update.py","{0}",CFG/"Packages.yaml",SRC,PKG,"{}"]],
         })
     },
-    "House-keeeping": {
+    "Development Environment": {
         # "refresh": {
         #     "Update README file":
         #         [[""]]

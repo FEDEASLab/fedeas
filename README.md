@@ -30,14 +30,11 @@
 The `fmake` command is invoked as follows from the command line:
 
 ```
-usage: fmake <command> [--<int>, --dry]
-   or: fmake help <command>
+usage: fmake <target> [--<command-num>, --dry]
+   or: fmake help <target>
 ```
 
-Where `<command>` may be selected from the following categories:
-
-  Resource management and indexing
-  -   {}
+Available `<target>` names are listed by category below:
 
   Documentation
   -   {`build`, `serve`}
@@ -45,8 +42,8 @@ Where `<command>` may be selected from the following categories:
   Packaging and Distribution
   -   {`update`}
 
-  House-keeeping
+  Development Environment
   -   {`init`, `upgrade`}
 
-To learn more about a command, run `>fmake help <command>`
+To learn more about a target and its commands, run `>fmake help <target>`
 
