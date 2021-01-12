@@ -2,7 +2,127 @@
 
 cmp: {}
 
-basic: {}
+Basic:
+  General_Functions: &Basic-General_Functions
+    ? 'A_matrix.m'
+    ? 'B_matrix'
+    ? 'BbariBbarx_matrix.m'
+    ? 'Create_NodalForces.m'
+    ? 'Create_PwForces.m'
+    ? 'Create_SimpleModel.m'
+    ? 'Fs_matrix.m'
+    ? 'Ks_matrix.m'
+    ? 'Localize.m'
+    ? 'Q0_vector.m'
+    ? 'V0_vector.m'
+  Analysis_Functions:
+    Static: &Basic-Analysis-Static
+      ? 'Plastic_Analysis_wLBT.m'
+      ? 'Plastic_Analysis_wUBT.m'
+  Solution_Scripts: &Basic-Solution_Scripts
+    ? 'S_Check_Global3dEQ.m'
+    ? 'S_DisplMethod.m'
+    ? 'S_ForceMethod.m'
+  Element_Library: &Basic-Element_Library
+    ? 'ElemLenOr.m'
+
+
+NLABasic:
+  General_Functions:
+    <<: *Basic-General_Functions
+    ? 'Add_Damping2State.m'
+    ? 'Add_Mass2Model.m' 
+    ? 'Aj_matrix.m'
+    ? 'Condense_MV.m'
+    ? 'Create_Damping.m'
+    ? 'Create_Loading.m'
+    ? 'Create_Model.m'
+    ? 'Create_NodalMass.m'
+    ? 'Extract_Str2ElState.m'
+    ? 'Structure.m'
+    ? 'SubIncr4ElemntSD.m'
+  Analysis_Functions:
+    Static:
+      <<: *Basic-Analysis-Static
+      ? 'Event2Event_NLAnalysis.m'
+      ? 'Increment.m'
+      ? 'Initialize.m'
+      ? 'Initialize_SolStrat.m'
+      ? 'Initialize_State.m'
+      ? 'Iterate.m'
+      ? 'LinearStep.m'
+      ? 'LoadFactorControl.m'
+      ? 'LoadFactorIncrement.m'
+      ? 'OneIteration.m'
+      ? 'PlasticAnalysis.m'
+      ? 'StateDetermination.m'
+      ? 'Update_State.m'
+    Dynamic:
+      # From /Solution_Library
+      ? 'OneTransientIteration.m' 
+      ? 'TimeIntegrationConstants.m'
+      ? 'TransientIncrement.m'
+      ? 'TransientInitialize.m'
+      ? 'TransientIterate.m'
+      ? 'TransientStateDetermination.m'
+      ? 'Update_TransientState.m'
+      # From /Dynamics/
+      ? 'AccelerationIntegral.m'
+      ? 'EigenMode.m'
+      ? 'ElasticResponseSpectrum.m'
+      ? 'InelSDOF_Newmark.m'
+      ? 'LSDOF_CentralDifference.m'
+      ? 'LSDOF_LinearWilson.m'
+      ? 'LSDOF_Newmark.m'
+      ? 'ModalAnalysis.m'
+      ? 'ModeDecomposition.m'
+  Solution_Scripts:
+    <<: *Basic-Solution_Scripts
+    ? 'S_MomCurvAnalysis.m'
+    ? 'S_NMAnalysis.m'
+    ? 'S_NMAnalysiswSepLoadHist.m'
+    # From /Solution_Library/Strategies
+    ? 'S_InitialStep.m'
+    ? 'S_MultiStep.m'
+    ? 'S_MultiStep_wLoadHist.m'
+    ? 'S_MultiStep_wLoadHistwSD.m'
+    ? 'S_Transient_MultiStep.m'
+    ? 'S_Transient_MultiStepwSD.m'
+  Element_Library:
+    <<: *Basic-Element_Library
+    # From /Geometry
+    ? 'DefGeom_2dFrm.m'
+    ? 'DefGeom_3dFrm.m'
+    ? 'GeomTran_2dFrm.m'
+    ? 'GeomTran_3dFrm.m'
+    ? 'GeomTran_Truss.m'
+    ? 'kg_2dFrm.m'
+    ? 'kg_3dFrm.m'
+    ? 'kg_Truss.m'
+    ? 'Large2du2v_Frm.m'
+    ? 'Large3du2v_Frm.m'
+    ? 'TranJnt.m'
+    # From /Element_Library
+    ? 'ElementLoading.m'
+    ? 'Extract_BasicEl2SecState.m'
+    ? 'Extract_El2MatState.m'
+    ? 'Extract_El2SecState.m'
+    ? 'ExtrReshu.m'
+    ? 'GPYS.m' 
+    ? 'ElementLoading.m'
+    # From /Element_Library/Frame_Elements/Linear
+    ? 'LE2dFrm.m'
+    ? 'LE2dFrm_wPdelta.m'
+    ? 'LE3dFrm.m'
+    ? 'LETruss.m'
+    # From /Element_Library/Frame_Elements/ConcentratedInelastic
+    ? 'BInel2dFrm_wEPLHM.m'
+    ? 'BInel2dFrm_wEPLHNMYS.m'
+    ? 'Inel2dFrm.m'
+    ? 'InelTruss.m'
+    # From /Element_Library/Frame_Elements/DistrInelastic
+    ? 'Dinel2dFrm_EBwDF.m'
+    ? 'Dinel2dFrm_EBwFF.m'
 
 latest:
   Pre-Processing:
