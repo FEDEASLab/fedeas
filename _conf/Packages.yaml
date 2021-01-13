@@ -41,6 +41,7 @@ NLABasic:
     ? 'Extract_Str2ElState.m'
     ? 'Structure.m'
     ? 'SubIncr4ElemntSD.m'
+  
   Analysis_Functions:
     Static:
       <<: *Basic-Analysis-Static

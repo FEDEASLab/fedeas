@@ -89,6 +89,8 @@ makefile = {
                 [{"cwd":f"{ROOT/'_cmds/elstir'}"}, "python","setup.py", "develop"],
                 [GIT, "clone", f"http://github.com/claudioperez/rendre", f"{ROOT/'_cmds/rendre'}"],
                 [{"cwd":f"{ROOT/'_cmds/rendre'}"}, "python","setup.py", "develop"],
+                [GIT, "clone", f"http://github.com/claudioperez/FEDEASdoc", f"{DOC}"],
+                [GIT, "checkout", f"folder-struct-2"],
             ]
         },
         "upgrade" : {
