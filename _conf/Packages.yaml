@@ -25,6 +25,43 @@ Basic:
     ? 'S_ForceMethod.m'
   Element_Library: &Basic-Element_Library
     ? 'ElemLenOr.m'
+  Utility_Functions:
+    General: &Basic-Utilities-General
+      # From Utilities/General
+      ? 'CleanStart.m'
+      ? 'Create_Units.m'
+      ? 'D_index.m'
+      ? 'H_index.m'
+    Plotting: &Basic-Utilities-Plotting
+      ? 'Create_Window.m'
+      ? 'Draw_Arrow.m'
+      ? 'Draw_Cube.m'
+      # From Utilities/Plotting/Structure
+      ? 'Get_HngPos4DefoElem.m'
+      ? 'Get_ModelScale.m'
+      ? 'Label_Model.m'
+      ? 'Plot_BounCond.m'
+      ? 'Plot_DeformedStructure.m'
+      ? 'Plot_ElemLoading.m'
+      ? 'Plot_Hinge4Elem.m'
+      ? 'Plot_Model.m'
+      ? 'Plot_NodalForces.m'
+      ? 'Plot_OpenPlasticHinges.m'
+      ? 'Plot_PlasticHinges.m'
+      ? 'Plot_Releases.m'
+      # From Utilities/Plotting/Elements
+      ? 'Label_2dMoments.m'
+      ? 'Label_AxialForces.m'
+      ? 'Plot_2dCurvDistr.m'
+      ? 'Plot_2dMomntDistr.m'
+      ? 'Plot_AxialForces.m'
+    PreProcessing: &Basic-Utilities-PreProcessing
+      ? 'ElemData2Qpl.m'
+    PostProcessing: &Basic-Utilities-PostProcessing
+      ? 'Complete_QV.m'
+      ? 'Post2Q.m'
+      ? 'Q2Post.m'
+
 
 
 NLABasic: &NLABasic
@@ -143,7 +180,106 @@ NLABasic: &NLABasic
     ? 'GMP1dMat.m'
     ? 'InelLPwLH1dMat.m'
     ? 'ManderConcr1dMat.m'
-  
+    # 16 - From Material_Library/3dMaterials
+    ? 'InelJ2PwLH3dMat.m'
+  Utility_Functions:
+    General:
+      # From Utilities/General
+      <<: *Basic-Utilities-General
+      ? 'Create_DispCyclewN.m'
+      ? 'Create_LoadHistory.m'
+      ? 'Create_MultDispCycleswN.m'
+      ? 'Print_PDFile.m'
+    Plotting:
+      <<: *Basic-Utilities-Plotting
+      ? 'Draw_3dAxisCross.m'
+      ? 'Draw_AxisCross.m'
+      ? 'Plot_DispPath.m'
+      ? 'Plot_EQRecord.m'
+      ? 'Plot_LoadHistory.m'
+      ? 'Plot_StoryDistr.m'
+      ? 'Plot_XYData.m'
+      # From Utilities/Plotting/Structure
+      ? 'Animate_EventSequence.m'
+      ? 'Animate_ResponsewHngHist.m'
+      # From Utilities/Plotting/Elements
+      ? 'Get_IPVarDistr.m'
+      ? 'Plot_ForcDistr.m'
+      ? 'Plot_IPVarDistr.m'
+      # From Utilities/Plotting/Sections
+      ? 'FontProp4PlotSection.m'
+      ? 'LineProp4PlotSection.m'
+      ? 'Plot_Mesh4Circ.m'
+      ? 'Plot_Mesh4MultRectShape.m'
+      ? 'Plot_SectionGeometry.m'
+    PreProcessing:
+      # From Utilities/PreProcessing/Elements
+      <<: *Basic-Utilities-PreProcessing
+      ? 'AISC_Section.m'
+      ? 'AISC_Sections.mat'
+      ? 'Create_FrameSections.m'
+      ? 'ElemData4SteelBraces.m'
+      ? 'ElemData4SteelFrame.m'
+      ? 'FiberElemData4SteelBraces.m'
+      ? 'FiberElemData4SteelFrame.m'
+      # From Utilities/PreProcessing/Structure
+      ? 'Add_Brace2Frame.m'
+      ? 'Add_GravityColumn2Frame.m'
+      ? 'Create_JntOffsets.m'
+      ? 'Create_Load4Frame.m'
+      ? 'Create_Mass4Frame.m'
+      ? 'Create_MRFrame.m'
+      # From Utilities/PreProcessing/Sections
+      ? 'Add_Bars2Section.m'
+      ? 'Add_Shape2Section.m'
+      ? 'CircLayer2Bar.m'
+      ? 'Create_BoxOutline.m'
+      ? 'Create_BoxwOvhOutline.m'
+      ? 'Create_CircBarGrid.m'
+      ? 'Create_CSecOutline.m'
+      ? 'Create_IPMesh4Circ.m'
+      ? 'Create_IPMesh4MultRectShape.m'
+      ? 'Create_IPMesh4Rect.m'
+      ? 'Create_IPMesh4WFShape.m'
+      ? 'Create_ISecOutline.m' 
+      ? 'Create_LSecOutline.m'
+      ? 'Create_MPMesh4Circ.m'
+      ? 'Create_MultRectShape.m'
+      ? 'Create_RectBarGrid.m'
+      ? 'Create_RectOutline.m'
+      ? 'Create_RectPatch.m'
+      ? 'Create_RectShape.m'
+      ? 'Create_RectwCovOutline.m'
+      ? 'Create_ShapewMat.m'
+      ? 'Create_SSecOutline.m'
+      ? 'Create_TSecOutline.m'
+      ? 'MP1dInt4Circ.m'
+      ? 'MP2dInt4Circ.m'
+      ? 'Rectangle2Fiber.m'
+    PostProcessing:
+      <<: &Basic-Utilities-PostProcessing
+      ? 'Add_OpenPHIndx2Post.m'
+      ? 'Create_NMInterDiagram.m'
+      ? 'Get_HFlrTrans.m'
+      ? 'Get_StDrift.m'
+      ? 'Get_StShear.m'
+      ? 'Get_StShearPD.m'
+      ? 'Get_Veps.m'
+    Interpolation:
+      # From Utilities/Interpolation
+      ? 'Hermite.m'
+      ? 'HermiteN.m'
+      ? 'Lagrange.m'
+      ? 'LagrangeN.m'
+    Quadrature:
+      # From Utilities/Quadrature
+      ? 'Gauss.m'
+      ? 'Lobatto.m'
+      ? 'Midpoint.m'
+      ? 'Radau.m'
+      ? 'Simpson.m'
+      ? 'Trap.m'
+
 
 latest:
   <<: *NLABasic
