@@ -1,0 +1,73 @@
+$schema: http://json-schema.org/draft-07/schema
+type: object
+title: SolStrat
+properties:
+  $schema: http://json-schema.org/draft-07/schema
+  type: object
+  title: SolStrat
+  description: a description
+  properties:
+    dlam:
+      type: number
+    Con_flag :
+      type: bool
+    IncrStrat:
+      $schema: http://json-schema.org/draft-07/schema
+      type: object
+      properties:
+        Dlam0:
+          description: initial load factor increment(s) 
+          type: array
+        Deltat:
+          description: pseudo-time increment 
+          type: number
+        StifUpdt:
+          description: activate stiffness update 
+          type: bool
+        LFCtrl:
+          description: activate load control 
+          type: bool
+        LCType:
+          description: load control type
+          type: string
+          enum: []
+        gamma:
+          description: exponent of current stiffness parameter method of load control
+          type: ~
+        IterStrat:
+          $schema: http://json-schema.org/schema#
+          type: object
+          properties:
+            StifUpdt:
+              description: stiffness update 
+              type: bool
+            Type:
+              description: 
+              type: string
+              enum: ['NR', 'ModNR', 'Krylov', 'LnSrch']
+            LFCtrl:
+              description: load control 
+              type: bool
+            LCType:
+              description: load control type
+            LCParam:
+              description: load control parameters
+            maxiter:
+              description: maximum number of iterations for equilibrium 
+              type: integer
+            tol:
+              description: tolerance for satifaction of equilibrium equations 
+              type: number
+        TimeStrat:
+          $schema: http://json-schema.org/schema#
+          type: object
+          properties:
+            Delta:
+              description: time step of transient analysis 
+              type: scalar
+            Type :
+              description: type of numerical integration 
+              type: string
+            Param:
+              description: parameters of numerical time integration scheme 
+              type: array

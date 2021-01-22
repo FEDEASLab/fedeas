@@ -1,0 +1,101 @@
+MatState:
+  properties: &MatState
+    e: ~
+
+SecState: 
+  properties: &SecState
+    Mat: {<<: *MatState}
+
+ElemState:
+  properties: &ElemState
+    u:
+      type: array
+      description: vector of total element displacements in global reference
+    Du:
+      type: array 
+      description: vector of element displacement increments from last convergence
+    DDu: 
+      description: vector of element displacement increments from last iteration
+    ke:
+      type: array 
+      description: element stiffness matrix in global reference; updated under ACTION = 'stif'
+    p:
+      type: array 
+      description: element resisting force vector in global reference; updated under ACTION = 'stif' or 'forc'
+    Past: 
+      description: element history variables at last converged state
+    Pres: 
+      description: current element history variables
+    lamda: 
+      description: row vector of current load factor(s)
+
+FiberElemState: 
+  properties: &FiberElemState
+    <<: *ElemState
+    Sec: {<< : *SecState}
+
+State:
+  properties:
+    static:
+      U:
+        type: array
+        description: Generalized displacements at global dofs
+      DU:
+        type: array
+        description: Displacement increments from last converged state
+      DDU:
+        type: array
+        description: Displacement increment from last iteration
+      Udot:
+        type: array
+        description: Velocities at global dofs
+      Uddot:
+        type: array
+        description: Accelerations at global dofs
+      Kf:
+        type: array 
+        shape: (nf x nf)
+        description: Stiffness matrix at free dofs
+      KL:
+        type: array
+        description: Lower diagonal stiffness matrix
+      KU:
+        type: array
+        description: Upper diagonal stiffness matrix
+      Kfd:
+        type: array
+        description: Stiffness matrix relating restrained dofs to free dofs
+      lamda:
+        type: Scalar 
+        description: Load factor
+      Time:
+        type: array
+        description: Pseudo-time
+      C:
+        type: array 
+        shape: (nf x nf) 
+        description: Damping matrix
+      Pr:
+        type: array 
+        description: Resisting forces at the free dofs
+      dW:
+        type: number 
+        description: External work increment
+      Past:
+        properties:
+          Elem:
+            type: array
+            items:
+              type: object 
+              anyOf: ~
+    transient:
+      lamda:
+        description: array of current load factors
+      Pi:
+        description: initial force vector (for load sequences)
+      Time:
+        description: pseudo-or real time counter
+      Ugddot:
+        description: support acceleration vector
+      C:
+        description: damping matrix

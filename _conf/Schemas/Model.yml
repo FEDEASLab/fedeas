@@ -1,0 +1,97 @@
+
+Model:
+  type: object
+  properties:
+    nn:
+      title: nn
+      description: number of nodes in structural model
+      type: integer
+    ndm:
+      title: ndm
+      description: dimension of structural model
+      type: integer
+    XYZ:
+      type: array
+      title: XYZ
+      description: array holding spacial coordinates of model nodes.
+      items:
+        anyOf:
+          - type: number
+          - type: array
+            items:
+              type: number
+          - type: array
+            items:
+              type: array
+              items:
+                type: number
+    ne:
+      description: number of elements in model.
+      type: integer
+    CON:
+      title: CON
+      anyOf:
+        - type: integer
+        - type: array
+          items:
+            type: integer
+    nen:
+      anyOf:
+        - type: integer
+        - type: array
+          items:
+            type: integer
+    ndf:
+      anyOf:
+        - type: integer
+        - type: array
+          items:
+            type: integer
+    ElemName:
+      type: array
+      title: ElemName
+      items:
+        type: string
+    DOF:
+      type: array
+      description: array with degree of freedom numbering
+      items:
+        anyOf:
+          - type: integer
+          - type: array
+            items:
+              type: integer
+    nt:
+      title: nt
+      type: integer
+    BOUN:
+      type: array
+      title: BOUN
+      items:
+        anyOf:
+          - type: integer
+          - type: array
+            items:
+              type: integer
+    nf:
+      title: nf
+      type: integer
+      description: number of free degrees of freedom
+    ntrm:
+      type: integer
+    nq:
+      type: integer
+  required:
+    - BOUN
+    - CON
+    - DOF
+    - ElemName
+    - XYZ
+    - ndf
+    - ndm
+    - ne
+    - nen
+    - nf
+    - nn
+    - nt
+    - ntrm

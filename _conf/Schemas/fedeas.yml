@@ -1,0 +1,205 @@
+
+
+# string
+# Numeric types
+# object
+# array
+# boolean
+# null
+
+
+
+
+FEDEASLab:  
+- name: Model
+  fields:
+  - name: ndm
+    datatype: int 
+    description: Dimension of structural model
+  - name: nn
+    datatype: int 
+    description: Number of nodes in structural model
+  - name: ne
+    datatype: int 
+    description: Number of elements
+  - name: nf
+    datatype: int 
+    description: Number of free degrees of freedom
+  - name: nt
+    datatype: scalar 
+    description: Total number of degrees of freedom
+  - name: ndf
+    datatype: int Array 
+    shape: (1 x ne) 
+    description: Number of element DOFs/node
+  - name: nen
+    datatype: int Array 
+    shape: (1 x ne) 
+    description: Number of end nodes/element
+  - name: XYZ
+    datatype: float array 
+    shape: (ndm x nn) 
+    description: Node coordinates (nodes are stored column-wise)
+  - name: BOUN
+    datatype: scalar Array 
+    shape: (ndfmax x nn) 
+    description: Boundary conditions (nodes stored column-wise)
+  - name: CON
+    datatype: cell Array 
+    shape: (1 x ne)
+    description: is a row vector Node connectivity
+  - name: DOF
+    datatype: scalar Array 
+    shape: (ndfmax x nn) 
+    description: Array with degree of freedom numbering
+  - name: ElemName
+    datatype: cell Array (cell is a character array Name of element function in element library)
+    shape: (1 x ne)
+  - name: Ml
+    datatype: scalar array 
+    shape: (nf x 1) 
+    description: Lumped mass vector
+
+- name: Loading
+  fields:
+  - name: Pref 
+    datatype: scalar Array 
+    shape: (nf x no_pat) 
+    description: Reference force values at free DOFs; as many columns as independent applied force patterns
+  - name: Uref 
+    datatype: scalar Array 
+    shape: (nt-nf x no_pat) 
+    description: Reference displacement values at restrained DOFs; as many columns as independent imposed displacement patterns
+  - name: Aref 
+    datatype: scalar Array 
+    shape: (nf x no_pat) 
+    description: Accelerations at free DOFs due to unit acceleration at the excited support DOF(s); as many columns as independent support acceleration patterns
+
+- name: SolStrat
+  fields:
+  - name: dlam
+    datatype: float
+  - name: Con_flag 
+    datatype: bool
+  - name: IncrStrat
+    fields:
+    - name: Dlam0
+      description: initial load factor increment(s)
+      datatype: row vector
+    - name: Deltat
+      description: pseudo-time increment
+      datatype: float
+    - name: StifUpdt
+      description: stiffness update
+      datatype: string
+    - name: LFCtrl
+      description: load control
+      datatype: string
+    - name: LCType
+      description: load control type
+      datatype: string
+    - name: gamma
+      description: exponent of current stiffness parameter method of load control
+      datatype:
+  - name: IterStrat
+    fields:
+    - name: StifUpdt
+      description: stiffness update 
+      datatype: string
+    - name: Type
+      description: 
+      datatype: string
+      values: ['NR', 'ModNR', 'Krylov', 'LnSrch']
+    - name: LFCtrl
+      description: load control 
+      datatype: string
+    - name: LCType
+      description: load control type
+    - name: LCParam
+      description: load control parameters
+    - name: maxiter
+      description: maximum number of iterations for equilibrium 
+      datatype: scalar
+    - name: tol
+      description: tolerance for satifaction of equilibrium equations 
+      datatype: scalar
+  - name: TimeStrat
+    fields:
+    - name: Delta
+      description: time step of transient analysis 
+      datatype: scalar
+    - name: Type 
+      description: type of numerical integration 
+      datatype: string
+    - name: Param
+      description: parameters of numerical time integration scheme 
+      datatype: row vector
+
+- name: State
+  fields:
+  - static:
+    - U:
+      - datatype:  Scalar Array 
+      - description: Generalized displacements at global dofs
+    - DU:
+      - datatype:  Scalar Array 
+      - description: Displacement increments from last converged state
+    - DDU:
+      - datatype:  Scalar Array 
+      - description: Displacement increment from last iteration
+    - Udot:
+      - datatype:  Scalar Array 
+      - description: Velocities at global dofs
+    - Uddot:
+      - datatype:  Scalar Array 
+      - description: Accelerations at global dofs
+    - Kf:
+      - datatype:  Array 
+      - shape: (nf x nf) 
+      - description: Stiffness matrix at free dofs
+    - KL:
+      - datatype:  Scalar Array 
+      - description: Lower diagonal stiffness matrix
+    - KU:
+      - datatype:  Scalar Array 
+      - description: Upper diagonal stiffness matrix
+    - Kfd:
+      - datatype:  Scalar Array 
+      - description: Stiffness matrix relating restrained dofs to free dofs
+    - lamda:
+      - datatype:  Scalar 
+      - description: Load factor
+    - Time:
+      - datatype:  Scalar Array 
+      - description: Pseudo-time
+    - C:
+      - datatype:  Array 
+      - shape: (nf x nf) 
+      - description: Damping matrix
+    - Pr:
+      - datatype:  Array 
+      - description: Resisting forces at the free dofs
+    - dW:
+      - datatype:  float 
+      - description: External work increment
+  - transient:
+    - lamda:
+      - description: row vector of current load factors
+    - Pi:
+      - description: initial force vector (for load sequences)
+    - Time:
+      - description: pseudo-or real time counter
+    - Ugddot:
+      - description: support acceleration vector
+    - C:
+      - description: damping matrix
+
+  elements:
+    - ElemData: data structure with element property information
+    - ElemState: is a data structure with the current element state
+    - elempost: is a data structure with element response information for post-processing in fields
+    - ARSZ: >
+        Boolean array of size ndf x nen,
+        where ndf = number of DOFs/node, nen = number of nodes,
+        with unit values corresponding to the active element DOFs
+        
