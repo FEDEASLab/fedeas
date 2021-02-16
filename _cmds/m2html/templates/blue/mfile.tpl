@@ -1,17 +1,23 @@
+---
+title: {NAME}
+id: {NAME}
+description: {H1LINE}
+...
 
-<!-- <a name="_top"></a>
-<div><a href="{MASTERPATH}{INDEX}">Home</a> &gt; <!-- BEGIN pathline -->  <a href="{LPATHDIR}">{PATHDIR}</a> &gt;  <!-- END pathline -->  {NAME}.m</div> -->
+<!-- <a name="_top"></a> -->
+<!-- <div><a href="{MASTERPATH}{INDEX}">Home</a> &gt;  -->
+<!-- BEGIN pathline -->  <a href="{LPATHDIR}">{PATHDIR}</a> &gt;  <!-- END pathline -->  
+<!-- {NAME}.m</div> -->
 
 <!--<table width="100%"><tr><td align="left"><a href="{MASTERPATH}{INDEX}"><img alt="<" border="0" src="{MASTERPATH}left.png">&nbsp;Master index</a></td>
 <td align="right"><a href="{INDEX}">Index for {MDIR}&nbsp;<img alt=">" border="0" src="{MASTERPATH}right.png"></a></td></tr></table>-->
 # `{NAME}`
-<!-- <h1>{NAME}
+
 <!-- BEGIN mexfile --> &nbsp;&nbsp;<img src="{MASTERPATH}{MEXTYPE}.png" alt="{PLATFORMS}" border="0" title="{PLATFORMS}"> <!-- END mexfile -->
-</h1> -->
+
 
 ## <a name="_name"></a>Purpose
 
-<!-- <h2 id="purpose"><a name="_name"></a>Purpose</h2> -->
 
 {H1LINE}
 
@@ -34,9 +40,10 @@
 This function calls:
 <ul style="list-style-image:url({MASTERPATH}matlabicon.gif)">
 <!-- BEGIN crossrefcall -->
-<li><a href="{L_NAME_CALL}" class="code" title="{SYNOP_CALL}">{NAME_CALL}</a>	{H1LINE_CALL}</li>
+<li><a href="/Functions/{L_NAME_CALL}" class="code" title="{SYNOP_CALL}">{NAME_CALL}</a>	{H1LINE_CALL}</li>
 <!-- END crossrefcall -->
 </ul>
+
 This function is called by:
 <ul style="list-style-image:url({MASTERPATH}matlabicon.gif)">
 <!-- BEGIN crossrefcalled -->

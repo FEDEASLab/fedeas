@@ -32,7 +32,7 @@ f"m2html('mfiles','latest/', " \
     "'global','on'," \
     "'extension','.md'," \
     "'source','off', " \
-    "'indexFile', '_index', " \
+    "'indexFile', '.autoindex', " \
     f"'data_file', '{CFG/'.aurore/fdlb.cache.json'}'" \
     "); " \
 "exit;\""
