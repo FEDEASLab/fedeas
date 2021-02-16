@@ -558,7 +558,8 @@ for i=1:length(mdir)
 	tpl = set(tpl,'var','L_DIR',...
 			  fullurl(mdir{i}));
 %cmp		  fullurl(mdir{i},[options.indexFile options.extension]));
-	tpl = set(tpl,'var','DIR',strrep(strrep(mdir{i},[options.mFiles '\'],''),'_',' '));
+	%tpl = set(tpl,'var','DIR',strrep(strrep(mdir{i},[options.mFiles '\'],''),'_',' '));
+	tpl = set(tpl,'var','DIR',strrep(mdir{i},[options.mFiles '\'],''));
 	tpl = parse(tpl,'rowdirs','rowdir',1);
 end
 
