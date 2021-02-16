@@ -1,7 +1,7 @@
 ---
-title: {NAME}
-id: {NAME}
-description: {H1LINE}
+title: "{NAME}"
+id: "{NAME}"
+description: "{H1LINE}"
 ...
 
 <!-- <a name="_top"></a> -->
@@ -28,7 +28,7 @@ description: {H1LINE}
 `{SYNOPSIS}` <!-- BEGIN script --> This is a script file. <!-- END script -->
 
 
-## <a name="_description"></a>Description
+## Description
 
 
 <pre class="comment">{DESCRIPTION}</pre>
