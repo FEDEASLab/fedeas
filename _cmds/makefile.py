@@ -53,7 +53,7 @@ makefile = {
     # },
     "Documentation": {
         "clean": (("--dry-run",),{
-            "Clean DOC/docs/Functions": 
+            "Clean DOC/docs/Functions":
                 [["python", CMD/"clean.py","--not","index.md",DOC/"docs/Functions/latest","{0}"]],
         }),
         "serve": {
@@ -61,17 +61,17 @@ makefile = {
                 [[*ELSTIR, "serve", "--config-file", f"{DOC/'elstir.yml'}"]]
         },
         "m2html": {
-            "Generate intermediate API pages with `m2html`.": 
+            "Generate intermediate API pages with `m2html`.":
                 [[{"cwd":PKG},MATLAB, "-batch", m2html]],
         },
         "build": {
-            "Clean DOC/docs/Functions":
-                [["python", CMD/"clean.py","--not","index.md",DOC/"docs/Functions/latest"]],
-            "Copy current `.m` files to 'latest' package.":
-                [["python", CMD/"update.py","latest", CFG/"Packages.yaml",SRC,PKG,"--all-m"]],
-            "Generate intermediate API pages with `m2html`.": 
-                [[{"cwd":PKG},MATLAB, "-batch", m2html]],
-            "Build full website from intermediate pages.": 
+           # "Clean DOC/docs/Functions":
+           #     [["python", CMD/"clean.py","--not","index.md",DOC/"docs/Functions/latest"]],
+           # "Copy current `.m` files to 'latest' package.":
+           #     [["python", CMD/"update.py","latest", CFG/"Packages.yaml",SRC,PKG,"--all-m"]],
+           # "Generate intermediate API pages with `m2html`.": 
+           #     [[{"cwd":PKG},MATLAB, "-batch", m2html]],
+            "Build full website from intermediate pages.":
                 [[*ELSTIR, "build", "--config-file", f"{DOC/'elstir.yml'}", "--site-dir", f"{WEB}"]],
         },
     },
