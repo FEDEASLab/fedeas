@@ -1,0 +1,11 @@
+<items>         <!--Base                  | Anchor-->
+  <source from="Gallery/Course_Problems-I/./*.m"   pnt-id="@s#@b" />
+  <source from="Gallery/Course_Problems-II/./*.m"  pnt-id="@s#@b" />
+  <source from="Gallery/Reader_Problems-I/./*.m"   pnt-id="@s#@b" />
+  <source from="Gallery/Reader_Problems-II/./*.m"  pnt-id="@s#@b" />
+</items>
+
+<!--qfem
+<source from="././*" pnt-id="%b/"
+
+-->

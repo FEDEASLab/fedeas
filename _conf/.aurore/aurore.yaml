@@ -1,0 +1,5 @@
+defaults:
+  Gallery.yaml
+std-items:
+  .ipynb: |
+  <str key="title" frag

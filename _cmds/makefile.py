@@ -32,10 +32,12 @@ f"m2html('mfiles','latest/', " \
     "'global','on'," \
     "'extension','.md'," \
     "'source','off', " \
-    "'indexFile', '.autoindex', " \
-    f"'data_file', '{CFG/'.aurore/fdlb.cache.json'}'" \
+    "'indexFile', 'index', " \
+    "'clip_synopsis', true " \
     "); " \
 "exit;\""
+
+# f"'data_file', '{CFG/'.aurore/fdlb.cache.json'}'" \
 
 ELSTIR = ["elstir"]
 
@@ -78,7 +80,7 @@ makefile = {
     "Packaging and Distribution":{
         "update": (options["pkg"] ,("--dry-run",), {
             "Copy '.m' files to the Packages directory.":
-                [[ "python", CMD/"update.py","{0}",CFG/"Packages.yaml",SRC,PKG,"{}"]],
+                [[ "python", CMD/"update2.py","{0}",CFG/"Packages.yaml",SRC,PKG,"{}"]],
         })
     },
     "Development Environment": {
@@ -108,6 +110,11 @@ makefile = {
                 [{"cwd":f"{ROOT/'_cmds/aurore'}"}, GIT, "pull"],
                 [{"cwd":f"{ROOT/'_cmds/elstir'}"}, GIT, "pull"],
                 [{"cwd":f"{ROOT/'_cmds/rendre'}"}, GIT, "pull"],
+            ]
+        },
+        "check": {
+            "Check fmake": [
+                [GIT, "--help"]
             ]
         },
         # "upgrade": {

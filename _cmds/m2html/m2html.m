@@ -132,10 +132,11 @@ options = struct('verbose', 1,...
                  'rootdir', pwd,...
 				 'ignoredDir', {{'.svn' 'cvs'}}, ...
                  'language', 'english', ...
-                 'data_file', false ...
+                 'data_dir', false, ...
+                 'clip_synopsis', false ...
              );
 
-if nargin == 1 & isstruct(varargin{1})
+if nargin == 1 && isstruct(varargin{1})
 	paramlist = [ fieldnames(varargin{1}) ...
 				  struct2cell(varargin{1}) ]';
 	paramlist = { paramlist{:} };
@@ -259,7 +260,7 @@ for i=1:2:length(paramlist)
 					error(sprintf('Unable to load %s.', pvalue));
 				end
 				options.load = 1;
-				[dummy options.template] = fileparts(options.template);
+				[~, options.template] = fileparts(options.template);
 			else
 				error(sprintf(msgInvalidPair,pname));
 			end
@@ -319,12 +320,14 @@ for i=1:2:length(paramlist)
 			else
 				error(sprintf(msgInvalidPair,pname));
             end
-        case 'data_file'
+        case 'data_dir'
             if ischar(pvalue)
-                options.data_file = pvalue;
+                options.data_dir = pvalue;
 			else
 				error(sprintf(msgInvalidPair,pname));
             end
+        case 'clip_synopsis'
+            options.clip_synopsis = pvalue;
 		otherwise
 			error(['Invalid parameter: ''' pname '''.']);
 	end
@@ -484,10 +487,9 @@ for i=1:length(mfiles)
 end
 json_string = jsonencode(containers.Map({'items'},{json_data}));
 
-%fid = fopen('../.aurore/aurore.cache.json','wt');
-fid = fopen(options.data_file,'wt');
-fprintf(fid, json_string);
-fclose(fid);
+%fid = fopen('.aurore/aurore.cache.json','wt');
+%fprintf(fid, json_string);
+%fclose(fid);
 %-------------------------------------------------------------------------------
 %% Setup the output directories
 %-------------------------------------------------------------------------------
@@ -498,24 +500,15 @@ for i=1:length(mdir)
 			if exist(fullfile(options.htmlDir,ldir{1:j})) ~= 7
 				%- Create the output directory
 				if options.verbose
-					fprintf('Creating directory %s\n',...
+					fprintf('Creating directory %s...\n',...
 							fullfile(options.htmlDir,ldir{1:j}));
 				end
 				if j == 1
-					if options.verbose 
-						fprintf('\n%s\n',escapeblank(options.htmlDir));
-						fprintf('\n%s\n',escapeblank(ldir{1}));
-					end
-					% [status, msg] = mkdir(escapeblank(options.htmlDir), ...
-					% 	escapeblank(ldir{1}));
-					[status, msg] = mkdir(options.htmlDir, ldir{1});
+					[status, msg] = mkdir(escapeblank(options.htmlDir), ...
+						escapeblank(ldir{1}));
 				else
-					if options.verbose 
-						fprintf('\n%s\n',fullfile(ldir{1:j}));
-					end
-					% [status, msg] = mkdir(escapeblank(options.htmlDir), ...
-					% 	escapeblank(fullfile(ldir{1:j})));
-					[status, msg] = mkdir(options.htmlDir, fullfile(ldir{1:j}));
+					[status, msg] = mkdir(escapeblank(options.htmlDir), ...
+						escapeblank(fullfile(ldir{1:j})));
 				end
 				error(msg);
 			end
@@ -543,7 +536,7 @@ tpl = set(tpl,'block','TPL_MASTER','graph','graphs');
 %- Open for writing the HTML master index file
 curfile = fullfile(options.htmlDir,[options.indexFile options.extension]);
 if options.verbose
-	fprintf('Creating HTML file %s...\n',curfile);
+	fprintf('Creating HTML file %s.\n',curfile);
 end
 fid = openfile(curfile,'w');
 
@@ -558,8 +551,7 @@ for i=1:length(mdir)
 	tpl = set(tpl,'var','L_DIR',...
 			  fullurl(mdir{i}));
 %cmp		  fullurl(mdir{i},[options.indexFile options.extension]));
-	%tpl = set(tpl,'var','DIR',strrep(strrep(mdir{i},[options.mFiles '\'],''),'_',' '));
-	tpl = set(tpl,'var','DIR',strrep(mdir{i},[options.mFiles '\'],''));
+	tpl = set(tpl,'var','DIR',strrep(strrep(mdir{i},[options.mFiles '\'],''),'_',' '));
 	tpl = parse(tpl,'rowdirs','rowdir',1);
 end
 
@@ -625,7 +617,7 @@ for i=1:length(d)
        & ~strcmp([n ext],'Thumbs.db') ... % do not copy this Windows generated file
 		if isempty(dir(fullfile(options.htmlDir,d{i})))
 			if options.verbose
-				fprintf('Copying template file %s...\n',d{i});
+				fprintf('Copying template file %s.\n',d{i});
 			end
 			%- there is a bug with <copyfile> in Matlab 6.5 :
 			%   http://www.mathworks.com/support/solutions/data/1-1B5JY.html
@@ -640,7 +632,7 @@ for i=1:length(d)
 				if ~isempty(errmsg)
 					error(errmsg)
 				else
-					warning(sprintf(['<copyfile> failed to do its job...\n' ...
+					warning(sprintf(['<copyfile> failed to do its job.\n' ...
 				'This is a known bug in Matlab 6.5 (R13).\n' ...
 				'See http://www.mathworks.com/support/solutions/data/1-1B5JY.html']));
 				end
@@ -666,7 +658,7 @@ if options.search
 	docinfo = cell(length(mfiles),2);
 	for i=1:length(mfiles)
 		docinfo{i,1} = h1line{i};
-		docinfo{i,2} = fullurl(mdirs{i}, [names{i} options.extension]);
+		docinfo{i,2} = fullurl(mdirs{i}, [names{i} ]);%options.extension]);
 	end
 	doxywrite(fullfile(options.htmlDir,idx_search),statlist,statinfo,docinfo);
 	
@@ -782,7 +774,7 @@ for i=1:length(mdir)
 	%- Set template fields
 	tpl = set(tpl,'var','INDEX',     [options.indexFile options.extension]);
 	tpl = set(tpl,'var','MASTERPATH',backtomaster(mdir{i}));
-	tpl = set(tpl,'var','MDIR',      mdir{i});
+	tpl = set(tpl,'var','MDIR',      get_dir_title(mdir{i}));
 	
 	%- Display Matlab m-files, their H1 line and their Mex status
 	tpl = set(tpl,'var','rows-m','');
@@ -925,12 +917,12 @@ if options.graph
 	%- Create the HTML template
 	tpl = template(options.template,'remove');
 	tpl = set(tpl,'file','TPL_GRAPH',tpl_graph);
-	tpl = set(tpl,'var','DATE',[datestr(now,8) ' ' datestr(now,1) ' ' ...
-								datestr(now,13)]);
+	tpl = set(tpl,'var','DATE',...
+        [datestr(now,8) ' ' datestr(now,1) ' ' datestr(now,13)]);
 	
     %- Create a full dependency graph for all directories if possible
-    if options.globalHypertextLinks & length(mdir) > 1
-        mdotfile = fullfile(options.htmlDir,[dotbase '.dot']);
+    if options.globalHypertextLinks && length(mdir) > 1
+        mdotfile = fullfile(options.htmlDir, [dotbase '.dot']);
         if options.verbose
 			fprintf('Creating full dependency graph %s...',mdotfile);
 		end
@@ -1070,13 +1062,14 @@ for i=1:length(mdir)
 			end
 			s = splitpath(mdir{i});
 			tpl = set(tpl,'var','pl','');
-			for k=1:length(s)
+            start_breadcrumb = 2;
+			for k=start_breadcrumb:length(s)
 				c = cell(1,k); for l=1:k, c{l} = filesep; end
 				cpath = {s{1:k};c{:}}; cpath = [cpath{:}];
 				if ~isempty(cpath), cpath = cpath(1:end-1); end
 				if ismember(cpath,mdir)
 					tpl = set(tpl,'var','LPATHDIR',[repmat('../',...
-						1,length(s)-k) options.indexFile options.extension]);
+						1,length(s)-k + 1) ]);%options.indexFile options.extension]);
 				else
 					tpl = set(tpl,'var','LPATHDIR','#');
 				end
@@ -1090,7 +1083,7 @@ for i=1:length(mdir)
 			samename = {samename.name};
 			tpl = set(tpl,'var','MEXTYPE', 'mex');
 			for k=1:length(samename)
-				[dummy, dummy, ext] = fileparts(samename{k});
+				[~, ~, ext] = fileparts(samename{k});
 				switch ext
 					case '.c'
 						tpl = set(tpl,'var','MEXTYPE', 'c');
@@ -1126,7 +1119,7 @@ for i=1:length(mdir)
 				elseif ~isempty(strmatch('%',tline))
 					%- Hypertext links on the "See also" line
 					ind = findstr(lower(tline),'see also');
-					if ~isempty(ind) | flag_seealso
+					if ~isempty(ind) || flag_seealso
 						%- "See also" only in files in the same directory
 						indsamedir = find(strcmp(mdirs{j},mdirs));
 						hrefnames = {names{indsamedir}};
@@ -1172,13 +1165,12 @@ for i=1:length(mdir)
 			for k=1:length(ind)
 				if strcmp(mdirs{j},mdirs{ind(k)})
 					tpl = set(tpl,'var','L_NAME_CALL', ...
-						[names{ind(k)}]);
+						['../' names{ind(k)}]);
 %cmp					[names{ind(k)} options.extension]);
 				else
 					tpl = set(tpl,'var','L_NAME_CALL', ...
-							  fullurl(backtomaster(mdirs{j}), ...
-							  		   mdirs{ind(k)}, ...
-									   [names{ind(k)}]));
+							  fullurl(backtomaster(mdirs{j},1), ...
+							  	  mdirs{ind(k)}, [names{ind(k)}]));
 %cmp								   [names{ind(k)} options.extension]));
 				end
 				tpl = set(tpl,'var','SYNOP_CALL',   synopsis{ind(k)});
@@ -1191,13 +1183,13 @@ for i=1:length(mdir)
 			tpl = set(tpl,'var','crossrefcalleds','');
 			for k=1:length(ind)
 				if strcmp(mdirs{j},mdirs{ind(k)})
-					tpl = set(tpl,'var','L_NAME_CALLED', ...
-						[names{ind(k)} options.extension]);
+                  called_path = names{ind(k)};
+				  tpl = set(tpl,'var','L_NAME_CALLED', ['../' names{ind(k)}]);
+						%[names{ind(k)} options.extension]);
 				else
 					tpl = set(tpl,'var','L_NAME_CALLED', ...
-						fullurl(backtomaster(mdirs{j}),...
-							mdirs{ind(k)}, ...
-							[names{ind(k)} options.extension]));
+						fullurl(backtomaster(mdirs{j},1),...
+							mdirs{ind(k)}, names{ind(k)}));
 				end
 				tpl = set(tpl,'var','SYNOP_CALLED',   synopsis{ind(k)});
 				tpl = set(tpl,'var','NAME_CALLED',   names{ind(k)});
@@ -1207,7 +1199,7 @@ for i=1:length(mdir)
 			
 			%- Set subfunction template field
 			tpl = set(tpl,'var',{'subf' 'onesubf'},{'' ''});
-			if ~isempty(subroutine{j}) & options.source
+			if ~isempty(subroutine{j}) && options.source
 				for k=1:length(subroutine{j})
 					tpl = set(tpl, 'var', 'L_SUB', ['#_sub' num2str(k)]);
 					tpl = set(tpl, 'var', 'SUB',   subroutine{j}{k});
@@ -1224,7 +1216,7 @@ for i=1:length(mdir)
 			end
 			
 			%- Display source code with cross-references
-			if options.source & ~strcmpi(names{j},'contents')
+			if options.source && ~strcmpi(names{j},'contents')
 				fseek(fid2,0,-1);
 				it = 1;
 				matlabsource = '';
@@ -1396,11 +1388,12 @@ function calldot(dotexec, mdotfile, mapfile, pngfile, opt)
     end
     
 %===============================================================================
-function s = backtomaster(mdir)
+function s = backtomaster(mdir, offset)
 	%- Provide filesystem path to go back to the root folder
+    if nargin < 2, offset = 0; end
 
 	ldir = splitpath(mdir);
-	s = repmat('../',1,length(ldir));
+	s = repmat('../', 1, length(ldir)+offset);
 	
 %===============================================================================
 function ldir = splitpath(p)
@@ -1469,3 +1462,8 @@ function str = horztab(str,n)
 	if n > 0
 		str = strrep(str,sprintf('\t'),blanks(n));
 	end
+
+function title = get_dir_title(str)
+    tokens = strsplit(str, filesep);
+    title = strrep(tokens{end}, '_', ' ');
+
