@@ -12,7 +12,6 @@ ROOT = Path(
     )
 )
 
-MATLAB = "matlab"
 
 with open(ROOT/"_conf/Packages.yaml", "r") as f:
     Packages = yaml.load(f,Loader=yaml.Loader)
@@ -24,6 +23,11 @@ with open(ROOT/"_conf/user.yaml","r") as f:
     User = yaml.load(f, Loader=yaml.Loader)
 
 GIT = os.path.expandvars(User['git'])
+
+try:
+    MATLAB = os.path.expandvars(User['matlab'])
+except:
+    MATLAB = "matlab"
 
 with open(ROOT/"_conf/General.yaml","r") as f:
     General = yaml.load(f, Loader=yaml.Loader)
