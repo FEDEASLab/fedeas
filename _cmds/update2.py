@@ -11,7 +11,8 @@ import yaml
 function_name_pattern = re.compile(r"= *([A-z_0-9]*)")
 
 def is_dir(data):
-    return all([data[k] is not None for k in data])
+    #return all([data[k] is not None for k in data])
+    return len(data) > 1
 
 def iterate_files(data):
     if isinstance(data,(list,tuple)):

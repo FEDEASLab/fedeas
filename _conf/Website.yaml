@@ -1,0 +1,21 @@
+
+
+Navigation:
+  # This configures the layout of the navigation bar 
+  # at the top of the FEDEASLab website. Links should be
+  # provided relative to the folder <ROOT>/FEDEASdoc/.
+  - About: 'About/'
+  - Guides: 'Guides/'
+  - Functions:
+    - Index: 'Functions/latest' 
+    - Pre-processing: 'Functions/latest/PreProcessing/'
+    - Modeling Libraries:
+      - Element: 'Functions/latest/Modeling_Library/Element_Library/'
+      - Material: 'Functions/latest/Modeling_Library/Material_Library/'
+      - Section: 'Functions/latest/Modeling_Library/Section_Library/'
+    - Solution Library: 'Functions/latest/Solution_Library/'
+    - Utilities: 'Functions/latest/Utilities/'
+  - Gallery: Gallery/
+
+Index-Templates:
+  Functions/latest: 

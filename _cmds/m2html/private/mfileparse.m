@@ -19,8 +19,12 @@ function s = mfileparse(mfile, mdirs, names, options)
 %  $Revision: 1.0 $Date: 2003/29/04 17:33:43 $
 
 error(nargchk(3,4,nargin));
-if nargin == 3,
-	options = struct('verbose',1, 'globalHypertextLinks',0, 'todo',0);
+if nargin == 3
+	options = struct( ...
+        'verbose',1, ...
+        'globalHypertextLinks',0, ...
+        'todo',0,...
+        'clip_synopsis', false);
 end
 
 %- Delimiters used in strtok: some of them may be useless (% " .), removed '.'
@@ -148,6 +152,13 @@ samename = dir(fullfile(pathstr,[name	'.*']));
 samename = {samename.name};
 ext = {};
 for i=1:length(samename)
-	[dummy, dummy, ext{i}] = fileparts(samename{i});
+	[~, ~, ext{i}] = fileparts(samename{i});
 end
 s.ismex = ismember(mexexts,ext);
+
+if options.clip_synopsis
+    s.h1line = regexprep(s.h1line, '^ *\w* ', '');
+    s.synopsis = regexprep(s.synopsis, '^ *\w* ', '');
+end
+
+
