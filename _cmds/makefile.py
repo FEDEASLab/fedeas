@@ -95,7 +95,10 @@ makefile = {
         # },
         "init" : {
             "Install in-house fmake system dependencies": [
-                [GIT, "clone", "-b", "cmp-dev", "--single-branch","--recurse-submodules", f"http://github.com/claudioperez/aurore", f"{ROOT/'_cmds/aurore'}"],
+                [GIT, "clone", 
+                  #"-b", "cmp-dev", 
+                  "--single-branch","--recurse-submodules", 
+                  f"http://github.com/claudioperez/aurore", f"{ROOT/'_cmds/aurore'}"],
                 [{"cwd":f"{ROOT/'_cmds/aurore'}"},"python","setup.py", "develop"],
                 [GIT, "clone", f"http://github.com/claudioperez/elstir", f"{ROOT/'_cmds/elstir'}"],
                 [{"cwd":f"{ROOT/'_cmds/elstir'}"}, "python","setup.py", "develop"],
@@ -130,6 +133,13 @@ makefile = {
         #             "{0} @ git+https://github.com/claudioperez/{0}@cmp-dev"]
         #     ]
         # })
+    },
+    "Other": {
+        "which": {
+            "Print fmake location": [
+                ["echo", ROOT]
+            ]
+        },
     }
 }
 

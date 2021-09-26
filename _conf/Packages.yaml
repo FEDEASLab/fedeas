@@ -287,8 +287,6 @@ NLABasic: &NLABasic
 
 latest:
   Element_Library:
-    ? .beam3d.py.swp
-    ? beam3d.py
     ? ElementLoading.m
     ? Extract_El2MatState.m
     ? ExtrReshu.m
