@@ -56,7 +56,12 @@ To learn more about a target and its commands, run `>{name} help <target>`
 """
 
 def run_cmd(makefile,targets,target,args=[],nums=[]):
-    recipe = makefile[targets[target]][target]
+    try:
+        recipe = makefile[targets[target]][target]
+    except KeyError:
+        print(f"ERROR -- Unknown target '{target}'")
+        return
+
     if isinstance(recipe,dict):
         commands = recipe.values()
         options = []
@@ -69,6 +74,12 @@ def run_cmd(makefile,targets,target,args=[],nums=[]):
         nums = list(range(10))
     elif not nums:
         nums = list(range(10))
+
+    if "--no-check" in args:
+        no_check = True
+    else:
+        no_check = False
+
     if "--dry" in args:
         args.pop(args.index("--dry"))
         for group in commands:
@@ -82,7 +93,11 @@ def run_cmd(makefile,targets,target,args=[],nums=[]):
                 if num in nums:
                     cmd = [str(f).format(*args[2:]) for f in command if not isinstance(f,dict)]
                     kwds = command[0] if isinstance(command[0],dict) else {}
-                    check = input(f"\nEnter 'run' to execute the following command: \n    >{' '.join(cmd)}\n     in environment: {kwds}\nInput: ")
+                    if not no_check:
+                        check = input(f"\nEnter 'run' to execute the following command: \n    >{' '.join(cmd)}\n     in environment: {kwds}\nInput: ")
+                    else:
+                        check = "run"
+
                     if check == "run":
                         subprocess.call(cmd, **kwds)
                         print("\n\nCommand completed.\n")
