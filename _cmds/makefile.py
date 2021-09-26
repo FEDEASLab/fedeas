@@ -26,7 +26,7 @@ GLY = ROOT/"Gallery"
 # f"'htmldir', '{Path('../FEDEASdoc/docs/Functions/')}', " \
 m2html = \
 f"\"addpath '{CMD/'m2html'}'; " \
-f"m2html('mfiles','{0}/', " \
+f"m2html('mfiles','latest/', " \
     f"'htmldir', '{DOC/'docs/Functions/'}', " \
     "'recursive','on'," \
     "'global','on'," \
@@ -64,7 +64,7 @@ makefile = {
         },
         "m2html": (options["pkg"], ("",), {
             "Generate intermediate API pages with `m2html`.":
-                [[{"cwd":PKG},MATLAB, "-batch", m2html]],
+                [[{"cwd":PKG},MATLAB, "-batch", m2html.replace(r"/mnt/c", r"C:\\")]],
         }),
         "build": {
            # "Clean DOC/docs/Functions":

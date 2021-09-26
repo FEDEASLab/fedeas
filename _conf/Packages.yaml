@@ -1,5 +1,7 @@
 # used by distribution scripts
 
+full: {}
+
 Basic:
   General_Functions: &Basic-General_Functions
     ? 'A_matrix.m'
