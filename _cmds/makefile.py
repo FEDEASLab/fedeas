@@ -26,7 +26,7 @@ GLY = ROOT/"Gallery"
 # f"'htmldir', '{Path('../FEDEASdoc/docs/Functions/')}', " \
 m2html = \
 f"\"addpath '{CMD/'m2html'}'; " \
-f"m2html('mfiles','latest/', " \
+f"m2html('mfiles','{0}/', " \
     f"'htmldir', '{DOC/'docs/Functions/'}', " \
     "'recursive','on'," \
     "'global','on'," \
@@ -62,10 +62,10 @@ makefile = {
             "Create a live server for real-time web page editing.":
                 [[*ELSTIR, "serve", "--config-file", f"{DOC/'elstir.yml'}"]]
         },
-        "m2html": {
+        "m2html": (options["pkg"], ("",), {
             "Generate intermediate API pages with `m2html`.":
                 [[{"cwd":PKG},MATLAB, "-batch", m2html]],
-        },
+        }),
         "build": {
            # "Clean DOC/docs/Functions":
            #     [["python", CMD/"clean.py","--not","index.md",DOC/"docs/Functions/latest"]],
