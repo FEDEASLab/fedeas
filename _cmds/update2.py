@@ -3,11 +3,12 @@ import re
 import sys
 import glob
 import shutil
+import fnmatch
 from pathlib import Path
 
 import yaml
 
-
+Exclusions = []
 function_name_pattern = re.compile(r"= *([A-z_0-9]*)")
 
 def is_dir(data):
@@ -25,7 +26,7 @@ def iterate_files(data):
     else:
         return []
 
-def update_pkg(dir_layout:dict, source_path:Path, dest_path:Path, dry_run=True):
+def update_pkg(dir_layout:dict, source_path:Path, dest_path:Path, dry_run=True, exclude=[]):
     """This function recursively walks the map-like data structure, `dir_layout`,
     and copies files from `source_path` to `dest_path` according to the given
     layout.
@@ -49,6 +50,9 @@ def update_pkg(dir_layout:dict, source_path:Path, dest_path:Path, dry_run=True):
                 if len(sources)>1:
                     # Possibly picked up .p files, extract only '.m' files.
                     sources = [s for s in sources if s.suffix == ".m"]
+                    for excl_pattern in exclude:
+                        print(f">>> Excluding '{excl_pattern}'")
+                        sources = [s for s in sources if not fnmatch.fnmatch(s, excl_pattern)]
                     assert len(sources) == 1, sources
                 source = sources[0]
                 # concatenate destination path
@@ -63,7 +67,7 @@ def update_pkg(dir_layout:dict, source_path:Path, dest_path:Path, dry_run=True):
                 print(f"FILE NOT FOUND: {function_name}")
 
         if isinstance(data, dict) and is_dir(data):
-            update_pkg(data,source_path,dest_path/folder_name, dry)
+            update_pkg(data,source_path,dest_path/folder_name, dry,exclude=exclude)
 
 
 if __name__=="__main__":
@@ -75,6 +79,9 @@ if __name__=="__main__":
     with open(pkg_index) as f:
         data = yaml.load(f,Loader=yaml.Loader)
 
+    Exclusions = data.pop("_Exclusions")
+    print(f"Exclusions: {Exclusions}")
+
     if "--dry-run" in sys.argv:
         dry = True
     else:
@@ -82,13 +89,13 @@ if __name__=="__main__":
 
     if "--all" in sys.argv:
         print("all")
-        update_pkg(data,source_path,dest_path, dry)
+        update_pkg(data,source_path,dest_path, dry,exclude=Exclusions)
 
     else:
         data = {
             sys.argv[1]: data[sys.argv[1]]
         }
-        update_pkg(data,source_path,dest_path, dry)
+        update_pkg(data,source_path,dest_path, dry, exclude=Exclusions)
 
 
 
