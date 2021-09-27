@@ -1,5 +1,11 @@
 # used by distribution scripts
 
+_Exclusions:
+- Auxiliary/
+- Old/
+- Development/
+- Test/
+
 full: {}
 
 Basic:
