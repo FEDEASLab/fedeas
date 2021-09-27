@@ -42,8 +42,9 @@ f"m2html('mfiles','latest/', " \
 ELSTIR = ["elstir"]
 
 options = {
-    "pkg": tuple(["--all"]+[pkg for pkg in Packages])
+    "pkg": tuple(["--all"]+[pkg for pkg in Packages if "_Excl" not in pkg])
 }
+
 galleries = tuple([k for k in Gallery])
 
 makefile = {
@@ -64,7 +65,7 @@ makefile = {
         },
         "m2html": (options["pkg"], ("",), {
             "Generate intermediate API pages with `m2html`.":
-                [[{"cwd":PKG},MATLAB, "-batch", m2html.replace(r"/mnt/c", r"C:\\")]],
+                [[{"cwd":PKG},MATLAB, "-batch", m2html.replace(r"/mnt/c", r"C:\\").replace("/","\\")]],
         }),
         "build": {
            # "Clean DOC/docs/Functions":
