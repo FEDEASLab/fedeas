@@ -16,11 +16,11 @@ title: {MDIR}
 </table>
 
 <!-- BEGIN othermatlab -->
-## Other files in this directory
+<!-- ## Other files in this directory -->
 
 <ul>
 <!-- BEGIN row-other -->
-<li>{OTHERFILE}</li>
+<!--<li>{OTHERFILE}</li>-->
 <!-- END row-other -->
 </ul>
 <!-- END othermatlab -->
