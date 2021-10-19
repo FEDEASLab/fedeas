@@ -1,5 +1,5 @@
 #git: '%LOCALAPPDATA%\GitHubDesktop\app-2.6.1\resources\app\git\cmd\git.exe'
 git: git
-#matlab: '/mnt/c/Program Files/MATLAB/R2020a/bin/matlab.exe'
+#matlab: '/mnt/c/Program Files/MATLAB/R2021b/bin/matlab.exe'
 matlab: matlab.exe
 
